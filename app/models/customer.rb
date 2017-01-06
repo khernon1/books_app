@@ -6,22 +6,19 @@ class Customer < ApplicationRecord
 # zero, five, or ten books in the shopping cart.
   def customers_with_specific_carts
     sql = <<-SQL
-      SELECT
-        (case when COUNT(shoppingcarts.customer_id) = 0 then 0
-              when COUNT(shoppingcarts.customer_id) = 5 then 5
-              when COUNT(shoppingcarts.customer_id) = 10 then 10 
-        end) as book_count, customers.email
+      SELECT customers.email, COUNT(shoppingcarts.customer_id) as customer_count
         FROM customers
         JOIN shoppingcarts
         ON shoppingcarts.customer_id = customers.id
         GROUP BY customers.email
-        HAVING book_count IS NOT NULL        
+        HAVING customer_count % 5 = 0
+          AND customer_count <= 10
     SQL
     
     ActiveRecord::Base.connection.execute(sql).each do |id|
-      puts "Email: #{id[1]}, Books: #{id[0]}"
+      puts "Email: #{id[0]}, Books: #{id[1]}"
     end
-    
+
   end
 
   def count_customers_items
@@ -40,3 +37,13 @@ class Customer < ApplicationRecord
   end
 
 end
+      # SELECT
+      #   (case when COUNT(shoppingcarts.customer_id) = 0 then 0
+      #         when COUNT(shoppingcarts.customer_id) = 5 then 5
+      #         when COUNT(shoppingcarts.customer_id) = 10 then 10 
+      #   end) as book_count, customers.email
+      #   FROM customers
+      #   JOIN shoppingcarts
+      #   ON shoppingcarts.customer_id = customers.id
+      #   GROUP BY customers.email
+      #   HAVING book_count IS NOT NULL        
