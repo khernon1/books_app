@@ -12,6 +12,7 @@ class Book < ApplicationRecord
         JOIN shoppingcarts
         ON shoppingcarts.book_id = books.id
         GROUP BY books.author
+        ORDER BY books.author
     SQL
     
     ActiveRecord::Base.connection.execute(sql).each do |id|

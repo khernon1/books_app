@@ -37,13 +37,4 @@ class Customer < ApplicationRecord
   end
 
 end
-      # SELECT
-      #   (case when COUNT(shoppingcarts.customer_id) = 0 then 0
-      #         when COUNT(shoppingcarts.customer_id) = 5 then 5
-      #         when COUNT(shoppingcarts.customer_id) = 10 then 10 
-      #   end) as book_count, customers.email
-      #   FROM customers
-      #   JOIN shoppingcarts
-      #   ON shoppingcarts.customer_id = customers.id
-      #   GROUP BY customers.email
-      #   HAVING book_count IS NOT NULL        
+  
